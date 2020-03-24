@@ -45,6 +45,38 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1.8dp"/>
+        <RelativeLayout
+            android:id="@+id/download_max"
+            android:layout_height="60dp"
+            android:layout_width="match_parent"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:background="@color/white_color">
+
+            <TextView
+                android:layout_centerVertical="true"
+                android:text="最多同时下载文件数"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content" />
+
+            <TextView
+                android:id="@+id/tv_download_max"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:ellipsize="end"
+                android:gravity="right"
+                android:singleLine="true"
+                android:text="1"
+                android:textColor="#AAAAAA"
+                android:textSize="14sp" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1.8dp"/>
 
         <RelativeLayout
             android:id="@+id/find_new_vision"

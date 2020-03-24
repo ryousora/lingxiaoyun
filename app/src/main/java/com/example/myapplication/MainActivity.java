@@ -2,12 +2,10 @@ package com.example.myapplication;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,14 +18,12 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.example.myapplication.action.UserRequest;
 import com.example.myapplication.model.Cache;
 import com.example.myapplication.model.Url;
 import com.example.myapplication.model.User;
@@ -39,22 +35,28 @@ import com.example.myapplication.utils.MSP;
 import com.example.myapplication.utils.PermissionUtils;
 import com.example.myapplication.utils.RequestBuild;
 import com.google.android.material.navigation.NavigationView;
+import com.liulishuo.filedownloader.FileDownloader;
+import com.liulishuo.filedownloader.connection.FileDownloadUrlConnection;
 
 import java.io.File;
-import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
 
+    public static Context CONTEXT;
+
 
     private final String[] BASIC_PERMISSIONS = new String[]{
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.CAMERA,
             Manifest.permission.READ_PHONE_STATE,
             Manifest.permission.RECORD_AUDIO,
             Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_FINE_LOCATION
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.REQUEST_INSTALL_PACKAGES,
+            Manifest.permission.INSTALL_PACKAGES
     };
     private static final int PERMISSION_REQUEST_CODE = 100001;
 
@@ -84,6 +86,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        CONTEXT = this.getApplication();
+        FileDownloader.setupOnApplicationOnCreate(this.getApplication())
+                .connectionCreator(new FileDownloadUrlConnection
+                        .Creator(new FileDownloadUrlConnection.Configuration()
+                        .connectTimeout(15_000) // set connection timeout.
+                        .readTimeout(15_000) // set read timeout.
+                ))
+                .commit();
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -102,7 +114,18 @@ public class MainActivity extends AppCompatActivity {
         RequestBuild.RequestInit();
         Url.initUrl(MainActivity.this);
         Cache.init();
-        Cache.setDownloadPath(MSP.getDownloadPath(MainActivity.this));
+        String path=MSP.getDownloadPath(MainActivity.this);
+        if(path == null || "".equals(path)) {
+            Cache.setDownloadPath(Constant.fileSavePath);
+        } else{
+            Cache.setDownloadPath(path);
+        }
+        String max=MSP.getDownload_max(MainActivity.this);
+        if(max == null || "".equals(max)) {
+            Cache.setMax_download("3");
+        } else{
+            Cache.setMax_download(max);
+        }
         userLogin();
         /*
         File filePath = new File(Constant.fileSavePath + File.separator);

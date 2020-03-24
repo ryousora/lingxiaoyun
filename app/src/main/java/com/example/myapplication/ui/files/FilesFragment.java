@@ -23,11 +23,14 @@ import com.example.myapplication.model.User;
 import com.example.myapplication.model.UserFileDTO;
 import com.example.myapplication.model.UserFolderDTO;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -161,12 +164,12 @@ public class FilesFragment extends Fragment {
         }
         return super.onCreateAnimation(transit, enter, nextAnim);
     }
-
+*/
     @Override
     public void onPause() {
         super.onPause();
         isGetData = false;
-    }*/
+    }
     @Override
     public void onResume() {
         if (!isGetData) {
@@ -187,23 +190,25 @@ public class FilesFragment extends Fragment {
         List<String> lDate=new ArrayList<>();
         List<Integer> lImageViews=new ArrayList<>();
 
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
+
         List<UserFolderDTO> folderDTOS=Cache.getFolders(parentId);
         if(folderDTOS.size()!=0) {
-            Log.e("00000000000000000000", folderDTOS.get(0).toString());
+//            Log.e("00000000000000000000", folderDTOS.get(0).toString());
             for (UserFolderDTO folderDTO : folderDTOS) {
                 lName.add(folderDTO.getFolderName());
                 lType.add("");
-                lDate.add(folderDTO.getCreateTime().toString());
+                lDate.add(sdf.format(folderDTO.getCreateTime()));
                 lImageViews.add(R.mipmap.folder);
             }
         }
         List<UserFileDTO> fileDTOS=Cache.getFiles(parentId);
         if(fileDTOS.size()!=0) {
-            Log.e("00000000000000000000", fileDTOS.get(0).toString());
+            Log.e("00000000000000000000", fileDTOS.toString());
             for (UserFileDTO fileDTO : fileDTOS) {
                 lName.add(fileDTO.getFileName());
                 lType.add("."+fileDTO.getFileType());
-                lDate.add(fileDTO.getCreateTime().toString());
+                lDate.add(sdf.format(fileDTO.getCreateTime()));
                 lImageViews.add(R.mipmap.file);
             }
         }
@@ -248,10 +253,10 @@ public class FilesFragment extends Fragment {
         /*SimpleAdapter adapter=new SimpleAdapter(this.getContext(), dataLists,R.layout.item_files,
                 new String[]{"fileImage","fileName","fileDate"},new int[]{R.id.fileImage,R.id.fileName,R.id.fileDate});*/
         recyclerView = root.findViewById(R.id.mLvFolders);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this.getContext(),dataLists,mHandler);
+        FileRecyclerViewAdapter adapter = new FileRecyclerViewAdapter(this.getContext(),dataLists,mHandler,root);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         /*
         RecyclerView.setAdapter(adapter);
         recyclerView.setOnItemClickListener((parent, view, setPosition, id) -> {

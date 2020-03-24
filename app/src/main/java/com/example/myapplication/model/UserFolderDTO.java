@@ -1,5 +1,7 @@
 package com.example.myapplication.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.util.Date;
 
 public class UserFolderDTO /*extends Sortable */{
@@ -11,12 +13,18 @@ public class UserFolderDTO /*extends Sortable */{
 
     private String folderName;
 
+    @JSONField(format="yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
+    @JSONField(format="yyyy-MM-dd HH:mm:ss")
     private Date modifyTime;
 
+    @JSONField(format="yyyy-MM-dd HH:mm:ss")
     private Date deleteTime;
 
+    public UserFolderDTO(){
+
+    }
     public UserFolderDTO(Integer userId, Integer parentId, String folderName) {
         this.userId = userId;
         this.parentId = parentId;

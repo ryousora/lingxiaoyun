@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,32 +17,38 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
+import com.example.myapplication.action.DownloadRequest;
+import com.example.myapplication.action.FileRequest;
 import com.example.myapplication.action.FolderRequest;
 import com.example.myapplication.model.Cache;
 import com.example.myapplication.model.User;
 import com.example.myapplication.model.UserFileDTO;
 import com.example.myapplication.model.UserFolderDTO;
+import com.example.myapplication.netService.reqbody.MoveReqBody;
 import com.example.myapplication.netService.reqbody.RenameFileReqBody;
 import com.example.myapplication.netService.reqbody.RenameFolderReqBody;
 import com.example.myapplication.netService.reqbody.ShredReqBody;
 import com.example.myapplication.utils.ToastUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+public class FileRecyclerViewAdapter extends RecyclerView.Adapter<FileRecyclerViewAdapter.ViewHolder> {
 
     private Context context;
     private List<Map<String,Object>> data;
     private Handler mHandler;
     private String file_type;
     private String file_name;
+    private Button moveTo;
 
-    public RecyclerViewAdapter(Context context, List<Map<String, Object>> data, Handler mHandler){
+    public FileRecyclerViewAdapter(Context context, List<Map<String, Object>> data, Handler mHandler,View root){
         this.context = context;
         this.data = data;
         this.mHandler=mHandler;
+        moveTo=root.findViewById(R.id.moveTo);
     }
 
     @Override
@@ -80,6 +87,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     return;
                 }
                 if (type==1){
+                    if(Cache.getMoveF()==id)
+                        return;
                     Cache.getInParentId().push(id);
                     FolderRequest.getFolder(v.getContext(), User.getUsername(), String.valueOf(id),"0");
                     return;
@@ -97,17 +106,37 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 int type=(int)info.get("type");
                 int id=(int)info.get("id");
                 Log.e("这里是点击下载的响应事件", "" + info);
+                DownloadRequest.downloadFile(v.getContext(),User.getUsername(),id);
             }
         });
 
-        holder.file_move.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Map info=getPosInfo(position);
-                int type=(int)info.get("type");
-                int id=(int)info.get("id");
-                Log.e("这里是点击移动的响应事件", "" + info);
+        holder.file_move.setOnClickListener(v -> {
+            Map info=getPosInfo(position);
+            int type=(int)info.get("type");
+            int id=(int)info.get("id");
+            Log.e("这里是点击移动的响应事件", "" + info);
+            moveTo.setVisibility(View.VISIBLE);
+            Cache.setMoveType(type);
+            Cache.setMoveF(id);
+        });
+
+        moveTo.setOnClickListener(v -> {
+            moveTo.setVisibility(View.INVISIBLE);
+            List<Integer> f=new ArrayList<>();
+            List<Integer> nu=new ArrayList<>();
+            f.add(Cache.getMoveF());
+            MoveReqBody moveReqBody=new MoveReqBody();
+            if (Cache.getMoveType()==1){
+                moveReqBody.setFolders(f);
+                moveReqBody.setFiles(nu);
+            }else if(Cache.getMoveType()==2){
+                moveReqBody.setFolders(nu);
+                moveReqBody.setFiles(f);
             }
+            moveReqBody.setDest(Cache.getInParentId().peek());
+            FolderRequest.move(context,User.getUsername(),moveReqBody);
+            Cache.setMoveType(0);
+            Cache.setMoveF(0);
         });
 
         holder.file_rename.setOnClickListener(v -> {

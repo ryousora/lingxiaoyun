@@ -21,8 +21,16 @@
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/mLvFolders"
-        ></androidx.recyclerview.widget.RecyclerView>
+        android:id="@+id/mLvFolders" />
+
+    <Button
+        android:id="@+id/moveTo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="移动到此文件夹"
+        android:layout_gravity="bottom"
+        android:visibility="invisible"/>
+
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/fab_menu"

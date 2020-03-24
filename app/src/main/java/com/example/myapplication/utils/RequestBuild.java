@@ -7,10 +7,18 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -18,27 +26,29 @@ import okhttp3.Request;
 import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.converter.fastjson.FastJsonConverterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RequestBuild {
-    private static Gson gson;
+//    public static Gson gson;
 
-    private static Retrofit retrofit;
+    public static Retrofit retrofit;
 
     public static void RequestInit(){
-        GsonBuilder builder=new GsonBuilder();
+        /*GsonBuilder builder=new GsonBuilder();
         builder.registerTypeAdapter(Date.class, (JsonDeserializer<Date>) (json, typeOfT, context) -> new Date(json.getAsJsonPrimitive().getAsLong()));
-        gson = builder.setDateFormat("yyyy-MM-dd hh:mm:ss").create();
+        gson = builder.setDateFormat("yyyy-MM-dd HH:mm:ss").create();*/
 
         retrofit = new Retrofit.Builder()
                 .baseUrl("http://localhost:8080/")
-                .addConverterFactory(GsonConverterFactory.create(gson))
+//                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addConverterFactory(FastJsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
     }
-    public static Gson getGson(){
-        return gson;
-    }
+//    public static Gson getGson(){
+//        return gson;
+//    }
     public static Retrofit getRetrofit() {
         return retrofit;
     }
@@ -60,9 +70,12 @@ public class RequestBuild {
     public static void setRetrofit(String Url) {
         retrofit = new Retrofit.Builder()
                 .baseUrl(Url)
-                .addConverterFactory(GsonConverterFactory.create(gson))
+//                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addConverterFactory(FastJsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(okHttpClient())
                 .build();
     }
+
+
 }

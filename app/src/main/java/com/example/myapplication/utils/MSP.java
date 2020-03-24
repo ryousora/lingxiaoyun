@@ -2,6 +2,14 @@ package com.example.myapplication.utils;
 
 import android.content.Context;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+
 import cn.qqtheme.framework.util.StorageUtils;
 
 
@@ -59,6 +67,29 @@ public class MSP {
 
     public static void setDownloadPath(String path, Context context) {
         SharedPreferencesUtil.setStringSharedPreferences(context,data,"path",path);
+    }
+
+    public static String getDownload_max(Context context) {
+        return SharedPreferencesUtil.getStringSharedPreferences(context,data,"download_max");
+    }
+
+    public static void setDownload_max(String download_max, Context context) {
+        SharedPreferencesUtil.setStringSharedPreferences(context,data,"download_max",download_max);
+    }
+
+    public static List<Map<String,Object>> getDL_info(Context context) {
+        String list_json=SharedPreferencesUtil.getStringSharedPreferences(context,data,"dl_info");
+        if(!"".equals(list_json)){
+            Gson gson=new Gson();
+            return gson.fromJson(list_json,new TypeToken<List<Map<String,Object>>>(){}.getType());
+        }
+        return null;
+    }
+
+    public static void setDL_info(List<Map<String,Object>> dl_info, Context context) {
+        Gson gson=new Gson();
+        String list_json=gson.toJson(dl_info);
+        SharedPreferencesUtil.setStringSharedPreferences(context,data,"dl_info",list_json);
     }
 
 }

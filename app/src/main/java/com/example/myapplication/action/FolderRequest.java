@@ -6,6 +6,9 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.example.myapplication.model.Cache;
 import com.example.myapplication.model.UserDTO;
 import com.example.myapplication.model.UserFileDTO;
@@ -29,7 +32,7 @@ import retrofit2.Response;
 
 public class FolderRequest {
 
-    private static Gson gson=RequestBuild.getGson();
+//    private static Gson gson=RequestBuild.getGson();
 
     private static Handler mHandler;
 
@@ -47,12 +50,17 @@ public class FolderRequest {
             public void onResponse(Call<Map<String,Object>> call, Response<Map<String,Object>> response) {
                 Map<String,Object> result = response.body();
                 Log.e("",result.toString());
-                List<UserFolderDTO> folders= gson.fromJson(gson.toJson(result.get("folders")),new TypeToken<List<UserFolderDTO>>(){}.getType());
-                List<UserFileDTO> files= gson.fromJson(gson.toJson(result.get("files")),new TypeToken<List<UserFileDTO>>(){}.getType());
+//                List<UserFolderDTO> folders= gson.fromJson(gson.toJson(result.get("folders")),new TypeToken<List<UserFolderDTO>>(){}.getType());
+//                List<UserFileDTO> files= gson.fromJson(gson.toJson(result.get("files")),new TypeToken<List<UserFileDTO>>(){}.getType());
+                List<UserFolderDTO> folders= JSON.parseArray(JSONObject.toJSONString(result.get("folders")),UserFolderDTO.class);
+                List<UserFileDTO> files= JSON.parseArray(JSONObject.toJSONString(result.get("files")),UserFileDTO.class);
                 Log.e("folder",folders.toString());
                 Log.e("file",files.toString());
-                Cache.putFolders(Integer.valueOf(folderId),folders);
-                Cache.putFiles(Integer.valueOf(folderId),files);
+                /*if(Cache.getFolders(Integer.valueOf(folderId))!=null||Cache.getFiles(Integer.valueOf(folderId))!=null) {
+                    Cache.delP(Integer.valueOf(folderId));
+                }*/
+                Cache.putFolders(Integer.valueOf(folderId), folders);
+                Cache.putFiles(Integer.valueOf(folderId), files);
                 Message message = Message.obtain();
                 message.arg1 = 1;
                 mHandler.sendMessage(message);/*
@@ -82,11 +90,11 @@ public class FolderRequest {
             @Override
             public void onResponse(Call<Map<String,Object>> call, Response<Map<String,Object>> response) {
                 Map<String,Object> result = response.body();
-                Log.e("",result.toString());
+                Log.e("",result.toString());/*
                 List<UserFolderDTO> folders= (List<UserFolderDTO>) result.get("folders");
                 List<UserFileDTO> files= (List<UserFileDTO>) result.get("files");
                 Cache.putFolders(0,folders);
-                Cache.putFiles(0,files);
+                Cache.putFiles(0,files);*/
             }
             @Override
             public void onFailure(Call<Map<String,Object>> call, Throwable t) {
@@ -105,11 +113,11 @@ public class FolderRequest {
             @Override
             public void onResponse(Call<Map<String,Object>> call, Response<Map<String,Object>> response) {
                 Map<String,Object> result = response.body();
-                Log.e("",result.toString());
-                List<UserFolderDTO> folders= (List<UserFolderDTO>) result.get("folders");
-                List<UserFileDTO> files= (List<UserFileDTO>) result.get("files");
-                Cache.putFolders(0,folders);
-                Cache.putFiles(0,files);
+                Log.e("move",result.toString());
+
+                Message message = Message.obtain();
+                message.arg1 = 0;
+                mHandler.sendMessage(message);
             }
             @Override
             public void onFailure(Call<Map<String,Object>> call, Throwable t) {

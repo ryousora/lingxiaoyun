@@ -25,6 +25,10 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+//    implementation 'com.liulishuo.okdownload:okdownload:1.0.7'
+//    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation 'org.ligboy.retrofit2:converter-fastjson-android:2.1.0'
+    implementation 'com.liulishuo.filedownloader:library:1.7.7'
     implementation('com.github.gzu-liyujiang.AndroidPicker:FilePicker:1.5.6') {
         exclude group: 'com.android.support'
     }

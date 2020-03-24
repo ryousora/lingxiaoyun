@@ -1,6 +1,8 @@
 package com.example.myapplication.netService;
 
 import com.example.myapplication.model.ResponseResult;
+import com.example.myapplication.model.UserFileDTO;
+import com.example.myapplication.netService.reqbody.RenameFileReqBody;
 import com.example.myapplication.netService.reqbody.UploadReqBody;
 
 import java.util.List;
@@ -13,6 +15,7 @@ import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.PartMap;
@@ -38,5 +41,8 @@ public interface FileService {
 
     @GET("/users/{username}/disk/files")
     Call<ResponseResult> downloadFile(@Path("username") String username,@QueryMap Map<String, String> fileId);
+
+    @GET("/user/{username}/disk/files/{fileId}")
+    Call<UserFileDTO> getFileInfo(@Path("username") String username, @Path("fileId") int fileId);
 
 }

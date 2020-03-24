@@ -72,7 +72,7 @@ public class UserRequest {
                 if(result.getStatus()==200) {
                     User.setUsername((String)data.get("username"));
                     /*User.setUserId(Integer.valueOf((String) Objects.requireNonNull(data.get("id"))));*/
-                    User.setUserId(Double.valueOf((double)data.get("id")).intValue());
+                    User.setUserId(/*Double.valueOf((double)*/(int)data.get("id")/*).intValue()*/);
                     User.setToken((String)data.get("token"));
                     User.saveSP(context);
                     ((Activity)context).finish();
@@ -115,8 +115,8 @@ public class UserRequest {
                 if (result.getStatus() == 201) {
                     assert user != null;
                     User.setUsername((String) user.get("username"));
-                    User.setUserId(Double.valueOf((double) user.get("userId")).intValue());
-                    User.setGender(Double.valueOf((double) user.get("gender")).intValue());
+                    User.setUserId(/*Double.valueOf((double) */(int)user.get("userId")/*).intValue()*/);
+                    User.setGender(/*Double.valueOf((double) */(int)user.get("gender")/*).intValue()*/);
                     User.setEmail((String) user.get("email"));
                     User.setIconimg_url((String) user.get("iconimg_url"));
                     User.saveSP(context);
