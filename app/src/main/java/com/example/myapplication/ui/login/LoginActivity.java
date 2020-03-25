@@ -148,14 +148,11 @@ public class LoginActivity extends FragmentActivity implements View.OnClickListe
                 }
             }
         });
-        btn_login.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                String username=et_username.getText().toString();
-                String password=et_password.getText().toString();
-                new User(username,password);
-                UserRequest.login(LoginActivity.this);
-            }
+        btn_login.setOnClickListener(v -> {
+            String username=et_username.getText().toString();
+            String password=et_password.getText().toString();
+            new User(username,password);
+            UserRequest.login(LoginActivity.this);
         });
         regist.setOnClickListener(new View.OnClickListener() {
             @Override

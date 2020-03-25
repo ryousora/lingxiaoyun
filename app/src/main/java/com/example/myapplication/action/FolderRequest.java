@@ -55,7 +55,7 @@ public class FolderRequest {
                 List<UserFolderDTO> folders= JSON.parseArray(JSONObject.toJSONString(result.get("folders")),UserFolderDTO.class);
                 List<UserFileDTO> files= JSON.parseArray(JSONObject.toJSONString(result.get("files")),UserFileDTO.class);
                 Log.e("folder",folders.toString());
-                Log.e("file",files.toString());
+                Log.e("file_other",files.toString());
                 /*if(Cache.getFolders(Integer.valueOf(folderId))!=null||Cache.getFiles(Integer.valueOf(folderId))!=null) {
                     Cache.delP(Integer.valueOf(folderId));
                 }*/

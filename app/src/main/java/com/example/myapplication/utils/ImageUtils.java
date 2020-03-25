@@ -314,7 +314,7 @@ public class ImageUtils extends AppGlideModule {
     }
 
     /**
-     * load bitmap by file path into imageView with diskCache
+     * load bitmap by file_other path into imageView with diskCache
      */
     public static void setImageByFile(Context context, ImageView imageView, String filePath,int default_img) {
         setImageByString(context, imageView, filePath, default_img);

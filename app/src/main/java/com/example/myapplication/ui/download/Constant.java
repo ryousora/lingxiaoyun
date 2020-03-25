@@ -1,8 +1,11 @@
+/*
 package com.example.myapplication.ui.download;
 
+*/
 /**
  * Created by Jacksgong on 12/19/15.
- */
+ *//*
+
 public interface Constant {
 
     String[] CHUNKED_TRANSFER_ENCODING_DATA_URLS = {
@@ -939,3 +942,4 @@ public interface Constant {
     };
 
 }
+*/

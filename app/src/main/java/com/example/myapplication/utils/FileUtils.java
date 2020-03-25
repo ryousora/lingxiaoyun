@@ -21,7 +21,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FileUtils {
     public static void saveImg(Bitmap bm, String folderPath, String fileName) throws IOException {
@@ -238,4 +240,68 @@ public class FileUtils {
             {".zip", "application/zip"},
             {"", "*/*"}
     };
+    public static Integer getType(String fileType) {
+        return Type.get("."+fileType.toLowerCase());
+    }
+    public static final Integer IMAGE = 1;
+    public static final Integer VIDEO = 2;
+    public static final Integer AUDIO = 3;
+    public static final Integer TEXT = 4;
+    public static final Integer OTHER = 0;
+    private static Map<String,Integer> Type;
+    static {
+        Type = new HashMap<>();
+        Type.put(".3gp", VIDEO);
+        Type.put(".asf", VIDEO);
+        Type.put(".avi", VIDEO);
+        Type.put(".bmp", IMAGE);
+        Type.put(".c", TEXT);
+        Type.put(".conf", TEXT);
+        Type.put(".cpp", TEXT);
+        Type.put(".doc", TEXT);
+        Type.put(".docx", TEXT);
+        Type.put(".gif", IMAGE);
+        Type.put(".h", TEXT);
+        Type.put(".htm", TEXT);
+        Type.put(".html", TEXT);
+        Type.put(".java", TEXT);
+        Type.put(".jpeg", IMAGE);
+        Type.put(".jpg", IMAGE);
+        Type.put(".js", TEXT);
+        Type.put(".log", TEXT);
+        Type.put(".m3u", AUDIO);
+        Type.put(".m4a", AUDIO);
+        Type.put(".m4b", AUDIO);
+        Type.put(".m4p", AUDIO);
+        Type.put(".m4u", VIDEO);
+        Type.put(".m4v", VIDEO);
+        Type.put(".mov", VIDEO);
+        Type.put(".mp2", AUDIO);
+        Type.put(".mp3", AUDIO);
+        Type.put(".mp4", VIDEO);
+        Type.put(".mpe", VIDEO);
+        Type.put(".mpeg", VIDEO);
+        Type.put(".mpg", VIDEO);
+        Type.put(".mpg4", VIDEO);
+        Type.put(".mpga", AUDIO);
+        Type.put(".msg", TEXT);
+        Type.put(".ogg", AUDIO);
+        Type.put(".pdf", TEXT);
+        Type.put(".png", IMAGE);
+        Type.put(".pps", TEXT);
+        Type.put(".ppt", TEXT);
+        Type.put(".prop", TEXT);
+        Type.put(".rc", TEXT);
+        Type.put(".rmvb", VIDEO);
+        Type.put(".sh", TEXT);
+        Type.put(".txt", TEXT);
+        Type.put(".wav", AUDIO);
+        Type.put(".wma", AUDIO);
+        Type.put(".wmv", AUDIO);
+        Type.put(".wps", TEXT);
+        Type.put(".xml", TEXT);
+        Type.put(".xls", TEXT);
+        Type.put(".xlsx", TEXT);
+        Type.put("", OTHER);
+    }
 }

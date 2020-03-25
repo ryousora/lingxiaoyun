@@ -352,12 +352,12 @@ public class DownloadFragment1 extends Fragment {
                 final int status = TasksManager.getImpl().getStatus(model.getId(), model.getPath());
                 if (status == FileDownloadStatus.pending || status == FileDownloadStatus.started ||
                         status == FileDownloadStatus.connected) {
-                    // start task, but file not created yet
+                    // start task, but file_other not created yet
                     holder.updateDownloading(status, TasksManager.getImpl().getSoFar(model.getId())
                             , TasksManager.getImpl().getTotal(model.getId()));
                 } else if (!new File(model.getPath()).exists() &&
                         !new File(FileDownloadUtils.getTempPath(model.getPath())).exists()) {
-                    // not exist file
+                    // not exist file_other
                     holder.updateNotDownloaded(status, 0, 0);
                 } else if (TasksManager.getImpl().isDownloaded(status)) {
                     // already downloaded and exist

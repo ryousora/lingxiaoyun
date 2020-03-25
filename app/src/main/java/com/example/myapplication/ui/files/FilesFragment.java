@@ -22,8 +22,8 @@ import com.example.myapplication.model.Cache;
 import com.example.myapplication.model.User;
 import com.example.myapplication.model.UserFileDTO;
 import com.example.myapplication.model.UserFolderDTO;
+import com.example.myapplication.utils.FileUtils;
 import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.TimeZone;
 
 import cn.qqtheme.framework.picker.FilePicker;
 import cn.qqtheme.framework.util.StorageUtils;
@@ -190,7 +191,10 @@ public class FilesFragment extends Fragment {
         List<String> lDate=new ArrayList<>();
         List<Integer> lImageViews=new ArrayList<>();
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        TimeZone gmt = TimeZone.getTimeZone("GMT+8");//关键所在
+        sdf.setTimeZone(gmt);
+        sdf.setLenient(true);
 
         List<UserFolderDTO> folderDTOS=Cache.getFolders(parentId);
         if(folderDTOS.size()!=0) {
@@ -209,7 +213,16 @@ public class FilesFragment extends Fragment {
                 lName.add(fileDTO.getFileName());
                 lType.add("."+fileDTO.getFileType());
                 lDate.add(sdf.format(fileDTO.getCreateTime()));
-                lImageViews.add(R.mipmap.file);
+                if(Objects.equals(FileUtils.getType(fileDTO.getFileType()), FileUtils.IMAGE))
+                    lImageViews.add(R.mipmap.file_image);
+                else if(Objects.equals(FileUtils.getType(fileDTO.getFileType()), FileUtils.VIDEO))
+                    lImageViews.add(R.mipmap.file_video);
+                else if(Objects.equals(FileUtils.getType(fileDTO.getFileType()), FileUtils.AUDIO))
+                    lImageViews.add(R.mipmap.file_audio);
+                else if(Objects.equals(FileUtils.getType(fileDTO.getFileType()), FileUtils.TEXT))
+                    lImageViews.add(R.mipmap.file_text);
+                else
+                    lImageViews.add(R.mipmap.file_other);
             }
         }
 

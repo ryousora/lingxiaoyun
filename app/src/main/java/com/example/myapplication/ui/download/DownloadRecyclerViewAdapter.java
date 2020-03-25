@@ -119,12 +119,12 @@ public class DownloadRecyclerViewAdapter extends RecyclerView.Adapter<DownloadRe
             final int stat = TasksManager.getImpl().getStatus(model.getId(), model.getPath());
             if (stat == FileDownloadStatus.pending || stat == FileDownloadStatus.started ||
                     stat == FileDownloadStatus.connected) {
-                // start task, but file not created yet
+                // start task, but file_other not created yet
                 holder.updateDownloading(stat, TasksManager.getImpl().getSoFar(model.getId())
                         , TasksManager.getImpl().getTotal(model.getId()));
             } else if (!new File(model.getPath()).exists() &&
                     !new File(FileDownloadUtils.getTempPath(model.getPath())).exists()) {
-                // not exist file
+                // not exist file_other
                 holder.updateNotDownloaded(stat, 0, 0);
             } else if (TasksManager.getImpl().isDownloaded(stat)) {
                 // already downloaded and exist
@@ -300,6 +300,7 @@ public class DownloadRecyclerViewAdapter extends RecyclerView.Adapter<DownloadRe
 
             //initDemo();
         }
+/*
 
         private void initDemo() {
             if (modelList.size() <= 0) {
@@ -310,6 +311,7 @@ public class DownloadRecyclerViewAdapter extends RecyclerView.Adapter<DownloadRe
                 }
             }
         }
+*/
 
         private SparseArray<BaseDownloadTask> taskSparseArray = new SparseArray<>();
 

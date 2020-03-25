@@ -70,6 +70,9 @@ public class FileRecyclerViewAdapter extends RecyclerView.Adapter<FileRecyclerVi
                 Map info=getPosInfo(position);
                 int type=(int)info.get("type");
                 int id=(int)info.get("id");
+                if(type==2){
+                    FileRequest.getFileUrl(context,User.getUsername(),id);
+                }
                 Log.e("这里是长按的响应事件", "" + info);
                 return true;
             }
@@ -174,16 +177,18 @@ public class FileRecyclerViewAdapter extends RecyclerView.Adapter<FileRecyclerVi
             builder.setTitle("提示");
             builder.setPositiveButton("确定", (dialog, which) -> {
                 ShredReqBody reqBody=new ShredReqBody();
+
                 if (type==1){
                     List<Integer> folders=reqBody.getFolders();
                     folders.add(id);
-                    reqBody.setFolders(folders);
+//                    reqBody.setFolders(folders);
                 }
-                if(type==2){
+                else if(type==2){
                     List<Integer> files=reqBody.getFiles();
                     files.add(id);
-                    reqBody.setFolders(files);
+//                    reqBody.setFiles(files);
                 }
+
                 FolderRequest.delete(v.getContext(),User.getUsername(),reqBody);
                 dialog.dismiss();
             });

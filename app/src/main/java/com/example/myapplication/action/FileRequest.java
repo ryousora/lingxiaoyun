@@ -1,14 +1,20 @@
 package com.example.myapplication.action;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.example.myapplication.model.Url;
 import com.example.myapplication.model.User;
+import com.example.myapplication.model.UserFileDTO;
 import com.example.myapplication.netService.reqbody.UploadReqBody;
+import com.example.myapplication.ui.download.DownloadFragment;
 import com.example.myapplication.utils.FileUtils;
 import com.example.myapplication.utils.RequestBuild;
 import com.example.myapplication.model.ResponseResult;
@@ -74,7 +80,7 @@ public class FileRequest {
     public static void uploadFile(final Context context,String username, String filePath,Integer parentId) {
         File file = new File(filePath);
         RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-        MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+//        MultipartBody.Part body = MultipartBody.Part.createFormData("file_other", file.getName(), requestFile);
 
         Log.e("file_upload-----------" + filePath, file.toString());
 
@@ -111,6 +117,35 @@ public class FileRequest {
             @Override
             public void onFailure(Call<ResponseResult> call, Throwable t) {
                 ToastUtils.showMessage(context, "上传出错！请重试");
+            }
+        });
+    }
+    public static void getFileUrl(final Context context, String username, int fileId) {
+
+        FileService service = RequestBuild.getRetrofit().create(FileService.class);
+        Call<UserFileDTO> call = service.getFileInfo(username,fileId);
+
+        call.enqueue(new Callback<UserFileDTO>() {
+            @Override
+            public void onResponse(Call<UserFileDTO> call, Response<UserFileDTO> response) {
+                UserFileDTO result = response.body();
+                if(result==null){
+                    ToastUtils.showMessage(context,"信息出错！请重试！");
+                    return;
+                }
+                String url= Url.getUrl()+result.getFileUrl();
+
+                ClipboardManager clipboard = (ClipboardManager)context.getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("simple text", url);
+                clipboard.setPrimaryClip(clip);
+
+                ToastUtils.showMessage(context,"成功复制下载链接！");
+
+            }
+            @Override
+            public void onFailure(Call<UserFileDTO> call, Throwable t) {
+                t.printStackTrace();
+                Toast.makeText(context, t.toString(), Toast.LENGTH_LONG).show();
             }
         });
     }

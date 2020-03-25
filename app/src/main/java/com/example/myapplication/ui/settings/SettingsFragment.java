@@ -92,6 +92,7 @@ public class SettingsFragment extends Fragment {
         }*/
         Cache.setMax_download(max_download);
         MSP.setDownload_max(max_download,getContext());
+        FileDownloader.getImpl().setMaxNetworkThreadCount(Integer.parseInt(max_download));
 
         super.onStop();
     }
